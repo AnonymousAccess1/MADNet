@@ -48,18 +48,26 @@ def get_grad_cam(model, target_layers, image, feature, out, nlp_feature, img):
 
     grayscale_cam = grayscale_cam[0, :]
     grayscale_cam = torch.Tensor(grayscale_cam)
-    grayscale_cam = grayscale_cam.narrow(1, nlp_feature.shape[1], 224*224*3)
+    grayscale_cam = grayscale_cam.narrow(1, nlp_feature.shape[1], 224 * 224 * 3)
     grayscale_cam = grayscale_cam.reshape(3, 224, 224)
     grayscale_cam = grayscale_cam.sum(axis=0)
+    # print(grayscale_cam.shape)
     visualization = show_cam_on_image(image.permute(1, 2, 0).numpy(), grayscale_cam.numpy(), use_rgb=True)
+    # result = overlay_mask(img, Image.fromarray(grayscale_cam), alpha=0.6)
     out = out.squeeze(0).cpu().detach().numpy()
+    print(out)
     plt.rcParams['font.family'] = 'Times New Roman'
-    plt.suptitle("Predict:[{:.2f},{:.2f}] , Label:1 , State:Anxiety, ID:51".format(out[0], out[1]), x=0.5, y=0.85)
-    plt.subplot(121), plt.title("Raw"), plt.axis('off'),
-    plt.imshow(img.resize((224, 224)))
-    plt.subplot(122), plt.title("Eigen-grad-CAM"), plt.axis('off'),
+    # plt.suptitle("Predict:[{:.2f},{:.2f}] , Label:0 , State:Normal, ID:1585".format(out[0], out[1]), x=0.5, y=0.85)
+    # plt.subplot(121), plt.title("Raw"), plt.axis('off'),
+    # plt.imshow(img.resize((224, 224)))
+    # plt.subplot(122), plt.title("Eigen-grad-CAM"), plt.axis('off'),
+    # plt.imshow(visualization)
+    # # plt.savefig("figure1028.png")
+    # plt.show()
+
+    plt.suptitle("Predict:[{:.2f},{:.2f}], State:Anxiety, ID:3086".format(out[0], out[1]), y=0.95, fontsize=20)
+    plt.axis('off')
     plt.imshow(visualization)
-    # plt.savefig("figure1028.png")
     plt.show()
 
 
